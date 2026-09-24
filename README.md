@@ -5,7 +5,13 @@
 内容全部虚构（主题是一台叫 DOJO-1 的温湿度记录仪），所以你可以把防护开到满级，
 不必担心碰到别人的站。**这是这个仓库存在的前提。**
 
-配套的教学项目是 [`crawler-labs`](../crawler-labs) —— 那边是"攻"，这边是"守"。
+配套的教学项目是 [**crawler-labs**](https://github.com/djdj45-SSH/crawler-labs) ——
+那边是"攻"，这边是"守"。真实站点的对照案例：本项目的博客
+[blog.djdj45.top](https://blog.djdj45.top) 用的就是同一套思路
+（边缘重定向 + 静态 trap 页），配置见 `cloudflare/README.md`。
+
+> 不加 shields.io 徽章是有意的：那个服务在国内经常加载不出来，会显示成裂图。
+> 纯文本链接在任何网络下都能用。
 
 ---
 
