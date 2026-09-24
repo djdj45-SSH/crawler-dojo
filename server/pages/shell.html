@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!-- crawler-dojo · L4 空壳页（{{NAME}}）
+     这一页用 BeautifulSoup 解析会得到零条记录 —— 列表容器是空的，
+     数据要等下面那段脚本跑完才出现。
+     注意：真站点不会在空壳页上标注自己是哪一级，
+     这里标出来是为了让实验能断言"我确实到了 L4"。 -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DOJO-1 调试笔记 · crawler-dojo</title>
+<style>
+  :root{--bg:#0b0d10;--line:#242b33;--text:#e8edf2;--mute:#8b98a5;--cyan:#5AD2E6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);padding:48px 24px;
+       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .wrap{max-width:780px;margin:0 auto}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px}
+  .brand{font-size:12px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase}
+  .brand b{color:var(--cyan);font-weight:600}
+  h1{font-size:25px;font-weight:600;margin:14px 0 6px}
+  .meta{font-size:12px;color:var(--mute)}
+  ul{list-style:none;margin-top:8px}
+  li{border-bottom:1px solid var(--line);padding:16px 0}
+  li a{color:var(--text);font-size:15px;font-weight:600;text-decoration:none}
+  .loading{color:var(--mute);font-size:13px;padding:22px 0}
+  noscript{color:#FFB65C;font-size:12.5px;display:block;padding:14px 0}
+</style>
+</head>
+<body data-shell="{{SHELL_MARKER}}" data-level="{{LEVEL}}">
+<div class="wrap">
+
+  <header>
+    <div class="brand">crawler-dojo <b>/ DOJO-1</b></div>
+    <h1>DOJO-1 调试笔记</h1>
+    <div class="meta">该列表由页面脚本在浏览器中构建</div>
+  </header>
+
+  <!-- 关键：服务端不渲染任何条目。HTML 里没有数据。 -->
+  <ul id="dojo-list"></ul>
+
+  <div class="loading" id="dojo-status">Loading…</div>
+  <noscript>这个页面需要执行 JavaScript 才能显示列表。</noscript>
+
+</div>
+
+<script src="{{PAYLOAD}}"></script>
+<script>
+/* 载荷文件（上面那个 <script src>）导出一个全局的 DOJO_ARTICLES。
+   它本身就是一个普通的可下载文本文件 —— 这是本级的正解之一：
+   与其上浏览器渲染，不如先把载荷读下来。 */
+(function () {
+  var list = document.getElementById('dojo-list');
+  var status = document.getElementById('dojo-status');
+  var data = (window.DOJO_ARTICLES || []);
+  if (!data.length) { status.textContent = '载荷为空。'; return; }
+  status.remove();
+  data.forEach(function (a) {
+    var li = document.createElement('li');
+    var a1 = document.createElement('a');
+    a1.href = '/posts/' + a.slug + '.html';
+    a1.textContent = a.title;
+    li.appendChild(a1);
+    list.appendChild(li);
+  });
+})();
+</script>
+
+</body>
+</html>

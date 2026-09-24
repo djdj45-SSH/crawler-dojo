@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# 靶场运行时产物
+*.log
+.dojo-state.json
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# 密钥：靶场的 dev secret 是公开的，但如果你改成真密钥，别提交
+.env
+.env.local

@@ -1,0 +1,10 @@
+# crawler-dojo 运行依赖
+#
+# 只用来跑靶场。爬虫侧依赖在 crawler-labs 里另算 ——
+# 两边分开，是为了让读者清楚"守"和"攻"各自需要什么。
+#
+# 版本按 2026-09 的最新稳定版写；不锁死，避免教程过期即报错。
+fastapi>=0.115
+uvicorn[standard]>=0.30
+# 自检脚本用 TestClient，它依赖 httpx
+httpx>=0.27

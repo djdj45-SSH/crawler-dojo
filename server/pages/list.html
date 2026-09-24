@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- crawler-dojo · 列表页
+     占位符：COUNT / ITEMS
+     真列表页与蜜罐列表页共用这一个模板 —— 蜜罐必须长得和真页一模一样。 -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DOJO-1 调试笔记 · crawler-dojo</title>
+<style>
+  :root{--bg:#0b0d10;--panel:#12161b;--line:#242b33;--text:#e8edf2;--mute:#8b98a5;--amber:#FFB65C;--cyan:#5AD2E6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);padding:48px 24px;
+       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:780px;margin:0 auto}
+  header{border-bottom:1px solid var(--line);padding-bottom:18px}
+  .brand{font-size:12px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase}
+  .brand b{color:var(--cyan);font-weight:600}
+  h1{font-size:25px;font-weight:600;margin:14px 0 6px}
+  .meta{font-size:12px;color:var(--mute)}
+  ul{list-style:none}
+  li{border-bottom:1px solid var(--line);padding:18px 0}
+  li a{color:var(--text);font-size:15.5px;font-weight:600;text-decoration:none}
+  li a:hover{color:var(--cyan)}
+  .meta,.tags{margin-top:6px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap}
+  .tag{font-size:10.5px;letter-spacing:.08em;color:var(--mute);border:1px solid var(--line);padding:2px 7px}
+  .summary{font-size:12.5px;color:var(--mute);line-height:1.75;margin-top:6px}
+  footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+         font-size:12px;color:var(--mute);line-height:1.9}
+  footer a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">crawler-dojo <b>/ DOJO-1</b></div>
+    <h1>DOJO-1 调试笔记</h1>
+    <div class="meta">共 {{COUNT}} 篇 · 全部内容为虚构，与任何真实站点无关</div>
+  </header>
+
+  <ul>
+{{ITEMS}}
+  </ul>
+
+  <footer>
+    数据接口：<a href="/api/articles">/api/articles</a> ·
+    契约：<a href="/__dojo/contract">/__dojo/contract</a>
+  </footer>
+
+</div>
+</body>
+</html>

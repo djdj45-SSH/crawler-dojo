@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!-- crawler-dojo · 被拦截页（403）
+     这一页是模板，在 server/pages/bot_403.html。
+     改它、重启靶场、再跑一次你的爬虫 —— 看输出怎么变。
+     双花括号的占位符由 server/guards/base.py 填充。 -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{{LEVEL}} 拦截 · crawler-dojo</title>
+<style>
+  :root{--bg:#0b0d10;--panel:#12161b;--line:#242b33;--text:#e8edf2;--mute:#8b98a5;--amber:#FFB65C;--cyan:#5AD2E6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;background:var(--bg);color:var(--text);
+       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+       display:flex;align-items:center;justify-content:center;padding:24px;
+       -webkit-font-smoothing:antialiased}
+  .panel{width:100%;max-width:680px;background:var(--panel);border:1px solid var(--line);
+         position:relative;padding:38px 34px 30px}
+  .panel::before,.panel::after{content:"";position:absolute;width:12px;height:12px;border:1px solid var(--cyan);opacity:.6}
+  .panel::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+  .panel::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+  .lvl{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--amber);
+       border:1px solid var(--amber);padding:2px 8px;margin-bottom:18px}
+  .code{font-size:58px;line-height:1;font-weight:600;color:var(--amber);letter-spacing:.02em}
+  .code small{font-size:12px;color:var(--mute);letter-spacing:.16em;margin-left:10px}
+  h1{font-size:19px;font-weight:600;margin:20px 0 12px}
+  p{font-size:13.5px;line-height:1.85;color:var(--mute);margin-bottom:12px}
+  p strong{color:var(--text);font-weight:600}
+  code{color:var(--cyan);font-size:13px}
+  .box{margin:20px 0;border:1px solid var(--line);background:#0d1116}
+  .row{padding:10px 14px;font-size:12.5px;border-bottom:1px solid var(--line);line-height:1.7}
+  .row:last-child{border-bottom:0}
+  .row b{color:var(--mute);font-weight:400;display:block;font-size:11px;letter-spacing:.1em;margin-bottom:3px}
+  .hint{border-left:2px solid var(--cyan);padding:2px 0 2px 14px;margin:18px 0}
+  .hint p{margin:0;font-size:13px}
+  footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--mute);line-height:1.9}
+  a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(90,210,230,.3)}
+</style>
+</head>
+<body>
+<main class="panel">
+
+  <div class="lvl">{{LEVEL}} · {{NAME}}</div>
+
+  <div class="code">403<small>BLOCKED</small></div>
+
+  <h1>这一级把你挡住了</h1>
+
+  <p>靶场按契约逐级开启防护，当前生效的是 <strong>{{LEVEL}} {{NAME}}</strong>。</p>
+
+  <div class="box">
+    <div class="row"><b>拦截原因</b>{{REASON}}</div>
+  </div>
+
+  <div class="hint"><p>{{HINT}}</p></div>
+
+  <p>
+    契约在 <a href="/__dojo/contract">/__dojo/contract</a> ——
+    里面写着每一级的防护手段、预期状态码和信号头。
+  </p>
+
+  <footer>
+    crawler-dojo · 爬虫靶场。内容全部虚构，与任何真实站点无关。<br>
+    「守」的一侧只在这里练，别拿去练别人的站。
+  </footer>
+
+</main>
+</body>
+</html>

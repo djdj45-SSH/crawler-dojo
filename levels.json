@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "name": "crawler-dojo",
+  "site": "DOJO-1 调试笔记",
+  "description": "爬虫靶场：同一份数据，六级递增的防护。这份契约是唯一事实来源 —— 爬虫侧不复制任何规则，启动时从 /__dojo/contract 拉取。",
+  "why": "如果把「第几级是什么、预期什么状态码」在靶场和爬虫里各写一遍，两边一定会漂移。抽成契约后，加一级防护只需改这里 + 加一个 guard，爬虫仓库一行都不用动。",
+  "whitelist": {
+    "header": "user-agent",
+    "contains": "dojobot",
+    "example": "DojoBot/1.0 (+https://blog.djdj45.top/about.html)",
+    "note": "命中白名单的请求跳过全部防护，直接拿到真数据。这是全项目的礼貌爬虫约定：声明身份 + 留联系方式。",
+    "bypasses": "L1 到 L5 全部"
+  },
+  "endpoints": {
+    "contract": "/__dojo/contract",
+    "health": "/__dojo/health",
+    "index": "/",
+    "list_json": "/api/articles",
+    "detail_html": "/posts/{slug}.html",
+    "js_payload": "/static/dojo-data.js"
+  },
+  "data_flavor": "全虚构。内容是「DOJO-1 温湿度记录仪」的调试笔记，与任何真实站点无关。",
+  "levels": [
+    {
+      "id": "L0",
+      "name": "无防护",
+      "guard": null,
+      "expect_status": 200,
+      "signal": null,
+      "teaches": ["requests 基本用法", "响应编码", "状态码含义"],
+      "note": "裸爬畅通。先建立基线：确认能拿到数据，再逐级开防护。"
+    },
+    {
+      "id": "L1",
+      "name": "UA 黑名单",
+      "guard": "ua",
+      "expect_status": 403,
+      "signal": { "header": "X-Dojo-Block", "value": "ua" },
+      "teaches": ["默认 UA 会暴露身份", "怎么声明自己的爬虫", "白名单放行"],
+      "config": {
+        "block": [
+          "python-requests", "httpx", "aiohttp", "scrapy",
+          "curl", "wget", "go-http-client", "okhttp", "java/",
+          "node-fetch", "axios", "libwww-perl", "python-urllib"
+        ]
+      },
+      "note": "改 UA 能过。但正确做法不是伪装成浏览器，而是声明身份 —— 后者才会被放行而不是被继续针对。"
+    },
+    {
+      "id": "L2",
+      "name": "频率限制",
+      "guard": "ratelimit",
+      "expect_status": 429,
+      "signal": { "header": "X-Dojo-Block", "value": "ratelimit" },
+      "teaches": ["退避重试", "滑动窗口", "Retry-After", "限流为什么会误伤"],
+      "config": { "requests": 5, "window_seconds": 10 },
+      "note": "本机跑靶场时，你和爬虫是同一个 IP —— 一开限流，你自己的浏览器也会被挡住。这就是限流的误伤问题，也是白名单存在的理由。"
+    },
+    {
+      "id": "L3",
+      "name": "蜜罐数据",
+      "guard": "honeypot",
+      "expect_status": 200,
+      "signal": { "header": "X-Dojo-Signal", "value": "honeypot" },
+      "teaches": ["数据校验", "字段一致性", "时间范围", "重复率", "链接可达性"],
+      "config": { "fake_count": 8 },
+      "flaws": [
+        { "id": "F1", "name": "未来日期", "how": "published_at 晚于当前日期" },
+        { "id": "F2", "name": "正文重复", "how": "所有条目的 body 完全相同" },
+        { "id": "F3", "name": "死链", "how": "url 指向的路径实际返回 404" },
+        { "id": "F4", "name": "数字自相矛盾", "how": "word_count 与实际正文长度偏差超过 3 倍" }
+      ],
+      "note": "状态码 200、结构完全正确、字段齐全 —— 但值是假的。爬虫会安静地把垃圾入库。四种破绽在 flaws 里，都是机械可判的。"
+    },
+    {
+      "id": "L4",
+      "name": "JS 渲染",
+      "guard": "jschallenge",
+      "expect_status": 200,
+      "signal": { "header": "X-Dojo-Signal", "value": "js-shell" },
+      "teaches": ["HTML 里没有数据怎么办", "先读源码找数据源", "再上浏览器渲染"],
+      "config": { "payload": "/static/dojo-data.js", "shell_marker": "dojo-shell" },
+      "note": "列表页 HTML 只有壳。两条正解：(1) 直接读 /static/dojo-data.js 的载荷；(2) 用 Playwright 渲染。先走第一条 —— 上浏览器是最后手段，不是第一手段。"
+    },
+    {
+      "id": "L5",
+      "name": "时效签名",
+      "guard": "signature",
+      "expect_status": 403,
+      "signal": { "header": "X-Dojo-Block", "value": "signature" },
+      "teaches": ["请求链路理解", "HMAC", "时间窗", "签名重放为什么失效"],
+      "config": {
+        "algo": "hmac-sha256",
+        "message": "{path}:{ts}",
+        "ts_header": "X-Dojo-Ts",
+        "token_header": "X-Dojo-Token",
+        "window_seconds": 30,
+        "dev_secret": "dojo-dev-secret"
+      },
+      "note": "密钥是公开的 —— 靶场教的是机制，不是保密。这是理解请求链路的一课，不是破解别人站的教程。真实站点绝不会把密钥交出来，所以这一级真正教的是「为什么它拦得住」而不是「怎么绕过」。"
+    }
+  ]
+}
