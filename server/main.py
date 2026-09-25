@@ -161,7 +161,9 @@ def create_app(level_spec: str = "all", *, secret: str | None = None) -> FastAPI
         """L4 的数据源。
 
         它是一个普通的、可以直接下载的文本文件 —— 这是本级的正解之一。
-        写成"藏在压缩产物里"才是真难点，那种情况见第 6 章的游戏站。
+        真正的难点在下一档：数据由代码算出来，任何一个文件里都找不到它。
+        本靶场刻意不做到那一步 —— 那已经是"要不要执行人家的代码"，
+        会盖过这一级想讲的东西。
         """
         arts = load_articles()
         body = json.dumps(arts, ensure_ascii=False, indent=2)
